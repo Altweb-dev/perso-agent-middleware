@@ -6,29 +6,27 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "little-night-a328",
 	"main": "src/index.ts",
-	"compatibility_date": "2025-09-06",
+	"compatibility_date": "2024-09-23",
+	"compatibility_flags": ["nodejs_compat_v2"],
 	"observability": {
 		"enabled": true
+	},
+	/**
+	 * Environment Variables - Variáveis não-sensíveis
+	 * Para desenvolvimento local, configure suas URLs aqui
+	 * Para produção, atualize com os valores corretos
+	 */
+	"vars": {
+		"SUPABASE_URL": "https://sua-url-supabase.supabase.co",
+		"N8N_WEBHOOK_URL": "https://sua-instancia-n8n.com"
 	}
 	/**
-	 * Smart Placement
-	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
-	 */
-	// "placement": { "mode": "smart" }
-	/**
-	 * Bindings
-	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-	 * databases, object storage, AI inference, real-time communication and more.
-	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-	 */
-	/**
-	 * Environment Variables
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-	 */
-	// "vars": { "MY_VARIABLE": "production_value" }
-	/**
-	 * Note: Use secrets to store sensitive data.
-	 * https://developers.cloudflare.com/workers/configuration/secrets/
+	 * Secrets - Para dados sensíveis (configure via CLI)
+	 * Execute os comandos abaixo para configurar as chaves sensíveis:
+	 * 
+	 * wrangler secret put OPENAI_API_KEY
+	 * wrangler secret put SUPABASE_ANON_KEY
+	 * wrangler secret put N8N_API_KEY
 	 */
 	/**
 	 * Static Assets
