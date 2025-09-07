@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "little-night-a328",
+	"name": "perso-agent-middleware",
 	"main": "src/index.ts",
 	"compatibility_date": "2024-09-23",
 	"compatibility_flags": ["nodejs_compat_v2"],
