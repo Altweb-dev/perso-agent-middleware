@@ -7,3 +7,14 @@ tsconfig = "tsconfig.json"
 [observability.logs]
 enabled = false
 
+# Vars below are for local dev defaults only. Prefer using `.dev.vars` for secrets.
+[vars]
+# Required (set via `.dev.vars` or dashboard):
+# SUPABASE_URL = "https://..."   # do not commit real values
+# SUPABASE_ANON_KEY = "..."      # do not commit real values
+# N8N_WEBHOOK_URL = "https://webhooks.altweb.ai/webhook"  # sem barra ao final é recomendado
+# N8N_API_KEY = "..."            # cuidado: trate como segredo
+
+# Optional override (default used if unset):
+WEBURN_API_URL = "https://perso.weburn.com.br/api/programas"
+

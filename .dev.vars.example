@@ -1,0 +1,9 @@
+# Copy this to `.dev.vars` (do not commit `.dev.vars`).
+OPENAI_API_KEY="sk-your-openai-key"
+SUPABASE_URL="https://your-project.supabase.co"
+SUPABASE_ANON_KEY="your-anon-key"
+N8N_WEBHOOK_URL="https://webhooks.altweb.ai/webhook"
+N8N_API_KEY="your-n8n-key"
+# Optional:
+WEBURN_API_URL="https://perso.weburn.com.br/api/programas"
+
