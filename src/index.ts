@@ -201,8 +201,8 @@ export default {
 		}
 
 		// Inicializar clientes
-		const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
-		const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+		// const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+		// const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 
 		// Função auxiliar genérica para executar ferramentas no n8n (rota /tool/<name>)
 		const executeTool = async (toolName: string, args: any): Promise<string> => {
@@ -238,6 +238,19 @@ export default {
 
 		// --- Lógica Principal do Worker ---
 		try {
+			// Validar variáveis obrigatórias e inicializar clientes
+			if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY || !env.OPENAI_API_KEY) {
+				return new Response(
+					JSON.stringify({
+						success: false,
+						error: 'Missing required env vars: SUPABASE_URL, SUPABASE_ANON_KEY, OPENAI_API_KEY',
+					}),
+					{ status: 500, headers: { 'content-type': 'application/json' } }
+				);
+			}
+			const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+			const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+
 			const { conversationId, newMessage } = await request.json<{
 				conversationId: string;
 				newMessage: string;
