@@ -35,12 +35,15 @@ const normPhone = (to: string) => {
 	return digits.startsWith('55') ? `+${digits}` : `+55${digits}`;
 };
 
+const trimTrailingSlash = (u?: string) => (u ? u.replace(/\/+$/, '') : u);
+
 async function postToSendWhatsappWebHook(
 	env: Env,
 	body: unknown,
 	traceId: string
 ): Promise<SendResult> {
-	const url = `${env.N8N_WEBHOOK_URL}/tool/send-whatsapp`;
+	const base = trimTrailingSlash(env.N8N_WEBHOOK_URL);
+	const url = `${base}/tool/send-whatsapp`;
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: {
@@ -196,6 +199,29 @@ async function buscarProgramasWeburn(
 // ---------- Worker ----------
 export default {
 	async fetch(request: Request, env: Env, _ctx: ExecutionContext): Promise<Response> {
+		const { pathname } = new URL(request.url);
+		if (request.method === 'GET' && pathname === '/health') {
+			const has = (v?: string) => typeof v === 'string' && v.length > 0;
+			const n8nBase = trimTrailingSlash(env.N8N_WEBHOOK_URL);
+			const health = {
+				ok: has(env.OPENAI_API_KEY) && has(env.SUPABASE_URL) && has(env.SUPABASE_ANON_KEY),
+				vars: {
+					OPENAI_API_KEY: has(env.OPENAI_API_KEY),
+					SUPABASE_URL: has(env.SUPABASE_URL),
+					SUPABASE_ANON_KEY: has(env.SUPABASE_ANON_KEY),
+					N8N_WEBHOOK_URL: has(env.N8N_WEBHOOK_URL),
+					N8N_API_KEY: has(env.N8N_API_KEY),
+					WEBURN_API_URL: has(env.WEBURN_API_URL ?? ''),
+				},
+				n8n: {
+					configured: has(env.N8N_WEBHOOK_URL),
+					base: n8nBase,
+					recommendation: has(env.N8N_WEBHOOK_URL) && env.N8N_WEBHOOK_URL !== n8nBase ? 'remove trailing slash' : 'ok',
+				},
+				timestamp: new Date().toISOString(),
+			};
+			return new Response(JSON.stringify(health), { status: 200, headers: { 'content-type': 'application/json' } });
+		}
 		if (request.method !== 'POST') {
 			return new Response('Método não permitido', { status: 405 });
 		}
@@ -209,7 +235,8 @@ export default {
 			try {
 				console.log(`Executando ferramenta ${toolName}:`, args);
 
-				const response = await fetch(`${env.N8N_WEBHOOK_URL}/tool/${toolName}`, {
+				const base = trimTrailingSlash(env.N8N_WEBHOOK_URL);
+				const response = await fetch(`${base}/tool/${toolName}`, {
 					method: 'POST',
 					headers: {
 						'content-type': 'application/json',

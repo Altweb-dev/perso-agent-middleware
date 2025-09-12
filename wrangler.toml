@@ -1,0 +1,9 @@
+name = "perso-agent"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat_v2"]
+tsconfig = "tsconfig.json"
+
+[observability.logs]
+enabled = false
+
