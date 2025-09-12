@@ -8,6 +8,8 @@ export interface Env {
 	SUPABASE_ANON_KEY: string;
 	N8N_WEBHOOK_URL: string; // ex.: https://webhooks.altweb.ai/webhook
 	N8N_API_KEY: string;
+	// Opcional: URL do endpoint Weburn para buscar programas
+	WEBURN_API_URL?: string;
 }
 
 // Interface para o histórico de conversa do Supabase
@@ -136,6 +138,59 @@ async function tool_send_whatsapp_list(
 		payload: interactive,
 	};
 	return postToSendWhatsappWebHook(env, body, traceId);
+}
+
+// ---------- Weburn: Buscar Programas (chamada direta) ----------
+async function buscarProgramasWeburn(
+	env: Env,
+	args: { nivel: string; modalidade: string; possui_equipamentos: boolean },
+	traceId: string
+) {
+	try {
+		const url = env.WEBURN_API_URL || 'https://perso.weburn.com.br/api/programas';
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort('timeout'), 10_000);
+		const body = {
+			nivel: args?.nivel,
+			modalidade: args?.modalidade,
+			possui_equipamentos: !!args?.possui_equipamentos,
+		};
+
+		const res = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'content-type': 'application/json',
+				'x-trace-id': traceId,
+			},
+			body: JSON.stringify(body),
+			signal: controller.signal,
+		});
+		clearTimeout(timeout);
+
+		if (!res.ok) {
+			const detail = await res.text().catch(() => '');
+			return { ok: false, error: { code: `HTTP_${res.status}` as const, detail } };
+		}
+
+		const json = await res.json().catch(() => ({}));
+		const maybeArray = Array.isArray(json)
+			? json
+			: Array.isArray((json as any).itens)
+			? (json as any).itens
+			: Array.isArray((json as any).programas)
+			? (json as any).programas
+			: undefined;
+
+		return {
+			ok: true,
+			itens: maybeArray ?? undefined,
+			count: Array.isArray(maybeArray) ? maybeArray.length : undefined,
+			data: json,
+		};
+	} catch (e: any) {
+		const msg = e?.message || String(e) || 'unknown_error';
+		return { ok: false, error: { code: 'FETCH_ERROR', detail: msg } };
+	}
 }
 
 // ---------- Worker ----------
@@ -423,7 +478,8 @@ Regras:
 						let toolResult = '';
 
 						if (functionName === 'buscar_programas_weburn') {
-							toolResult = await executeTool('buscar-programas', functionArgs);
+							const r = await buscarProgramasWeburn(env, functionArgs, crypto.randomUUID());
+							toolResult = JSON.stringify(r);
 						} else if (functionName === 'send_whatsapp' || functionName === 'send_whatsapp_text') {
 							// legado + nova: converte para webhook único (message_type=text)
 							const r = await tool_send_whatsapp_text(env, functionArgs, crypto.randomUUID());
