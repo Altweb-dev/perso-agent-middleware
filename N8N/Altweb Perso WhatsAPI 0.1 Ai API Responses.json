@@ -1,0 +1,803 @@
+{
+  "name": "Altweb Perso WhatsAPI 0.1 Ai API Responses",
+  "nodes": [
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.mensagens",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1792,
+        3424
+      ],
+      "id": "324cc2b9-5730-480f-9cb7-871492f48cde",
+      "name": "Split Out1",
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -896,
+        3248
+      ],
+      "id": "99d0ad05-e0bc-48ce-8dbe-afc67ea29d1a",
+      "name": "Loop Over Items1",
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        128,
+        3344
+      ],
+      "id": "7719d9d8-e805-4001-b515-42fd6e86ce61",
+      "name": "Wait3",
+      "webhookId": "828ca90d-3cd8-484f-9e2f-6ab08793090d",
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        2864
+      ],
+      "id": "d4c64675-5a38-4ca0-b0d9-d95b6f184b84",
+      "name": "No Operation, do nothing5",
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        -2768,
+        3744
+      ],
+      "id": "1253e28f-725c-4220-819f-690b0967dfb4",
+      "name": "Auto-fixing Output Parser1",
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2928,
+        4032
+      ],
+      "id": "258c2404-a323-41b9-a964-89ca4da9539c",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "gM80i8ROGW5nKpyt",
+          "name": "OpenAi Altweb"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Humanizar Resposta\nQuebra de mensagens em mensagens menores e com contexto.",
+        "height": 1112,
+        "width": 580,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3056,
+        3104
+      ],
+      "id": "77d6d798-5d4b-48eb-9af7-94a57989e0ef",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## Envio das Respostas ao Usuário\nEnvio das mensagens quebradas para o usuário",
+        "height": 1120,
+        "width": 2008,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2448,
+        3088
+      ],
+      "id": "6626d1b1-86b3-46ec-a7cc-bd9cad8ea67d",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Ajuste sua autentificação da API Oficial",
+        "height": 300,
+        "width": 230,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1376,
+        3136
+      ],
+      "id": "7d4a95a7-8b1d-48da-946e-0b4d8608ace8",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"mensagens\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  },\n  \"required\": [\"mensagens\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -2640,
+        4016
+      ],
+      "id": "a07d22f6-84b4-402e-b63d-d9d592f17d55",
+      "name": "Structured Output Parser [Schema]",
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{PHONE_NUMBER_ID}}}/register ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "pin",
+              "value": "=123456"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -6064,
+        4464
+      ],
+      "id": "8e1910d0-0a3c-4a50-a25c-a0e98ce4eb84",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "content": "## Registrar número de WhatsApp Oficial\nDocumentação API: \nAntes de podermos utilizar nosso novo número na API oficial, precisamos registrar nosso número no WhatsApp, seguindo a documentação:\nhttps://developers.facebook.com/docs/whatsapp/cloud-api/reference/registration",
+        "height": 540,
+        "width": 400,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -6224,
+        4128
+      ],
+      "id": "247aec40-2cf7-4b4e-9cdb-4f27285bb816",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "Realize a chamada abaixo para registrar seu número. Você precisará do seu Token, ID da Conta do WhatsApp e ID do Número\n",
+        "height": 280,
+        "width": 310,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -6176,
+        4352
+      ],
+      "id": "4b528d6e-0972-45d6-af64-0ec3a6ff162b",
+      "name": "Sticky Note26"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<mensagem_do_usuario>\n{{ $json.response }}\n</mensagem_do_usuario>\n\nPlatform: {{ $('Padronizar Dados').first().json.platform }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Apenas estruture a <mensagem_do_usuario> no formato JSON solicitado no output parser e seguindo as instruções de formatação abaixo. Não altere nada mais na mensagem\n\n# Formatação\n- Divida as mensagens para que fiquem naturais e humanizadas;\n- Divida as mensagens conforme estrutura do output parser para que não fiquem muito longas (maiores que 240 caractéres);\n- Não separe mensagens vazias;\n- Use quebras de linhas (\\n\\n) após pontos finais;\n- Para negrito (bold) use apenas um '' nunca duas '' (exemplo: *negrito).\n\nExemplo de formato JSON:\n{\n\"mensagens\": [\"Mensagem 0\", \"Mensagem 1\", \"Mensagem 2\"]\n}"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        -2912,
+        3536
+      ],
+      "id": "a705219c-bf31-4b8e-9f5f-6b411dc7a6c4",
+      "name": "Basic LLM Chain",
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "88f1122d-96a1-4639-bb61-ed1ca71d87ba",
+              "leftValue": "={{ $json.metadata.phone_number_id }}",
+              "rightValue": "=279968285194059",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -4816,
+        3552
+      ],
+      "id": "0a8919a8-0794-4555-861a-7a081d7bcb20",
+      "name": "If1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -4464,
+        3712
+      ],
+      "id": "b9a02d9d-5f74-4ac9-a296-ef22708ac162",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [
+        -656,
+        3744
+      ],
+      "id": "d6ef454d-1ea1-4a4f-ae5b-940b32097a30",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "## Instruções de Uso\n🔴 Áreas em vermelho você deve realizar alterações de acordo com seu canal de entrada;\n🟢 Áreas em verde já estão pré configuradas para o canal do Template, caso vá utilizar outro canal, também fazer devidas alterações nesses nodes;\n\n⚠️ Atenção: \n1. Não altere nome de parâmetros pré-existentes para para evitar quebra do fluxo;\n2. Fique a vontade para adicionar novos parâmetros caso necessário;",
+        "height": 220,
+        "width": 690,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4576,
+        2848
+      ],
+      "id": "da90c959-a965-467c-903d-49bc5e81d456",
+      "name": "Sticky Note36"
+    },
+    {
+      "parameters": {
+        "content": "## Gatilho\nChat Trigger, WhatsApp, Instagram, Telegram, Messenger, etc..",
+        "height": 864,
+        "width": 1000,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -5136,
+        3120
+      ],
+      "id": "f007a909-e3a5-444a-81ff-0b7bd95a714c",
+      "name": "Sticky Note37"
+    },
+    {
+      "parameters": {
+        "jsCode": "function normalizeBrazilianPhoneNumber(phoneNumber) {\n  // Remove todos os caracteres não numéricos\n  let cleanedNumber = phoneNumber.replace(/\\D/g, \"\");\n\n  // Verifica se é um número brasileiro (começa com 55)\n  if (cleanedNumber.startsWith(\"55\")) {\n    // Remove o prefixo 55 para facilitar a validação do DDD e do número\n    let numberWithoutCountryCode = cleanedNumber.substring(2);\n    \n    // Verifica se o número (sem o 55) tem 10 dígitos (DDD + 8 dígitos do número antigo)\n    // e se o primeiro dígito do número é um dos que indicam celular (6, 7, 8, 9)\n    if (numberWithoutCountryCode.length === 10 && [\"6\", \"7\", \"8\", \"9\"].includes(numberWithoutCountryCode.substring(2, 3))) {\n      // Insere o '9' após o DDD (no índice 2 de numberWithoutCountryCode)\n      cleanedNumber = \"55\" + numberWithoutCountryCode.substring(0, 2) + \"9\" + numberWithoutCountryCode.substring(2);\n    }\n  }\n  \n  return cleanedNumber;\n}\n\n// Detectar a origem dos dados\nlet sourceData = $input.all()[0].json;\nlet platform = 'unknown';\nlet standardData = {\n  platform: '',\n  userId: '',\n  userName: '',\n  userPhone: '',\n  userEmail: '',\n  messageType: '',\n  messageContent: '',\n  mediaId: '',\n  mediaCaption: '',\n  hasBinaryData: false,\n  originalData: sourceData\n};\n\n// Verificar se tem dados binários\nlet hasBinary = false;\ntry {\n  hasBinary = Object.keys($binary).length > 0;\n} catch (error) {\n  hasBinary = false;\n}\n\n// Detectar plataforma\nif (sourceData.messaging_product === 'whatsapp') {\n  platform = 'whatsapp';\n} else if (sourceData.body && sourceData.body.platform === 'web') {\n  platform = 'web';\n} else if (sourceData.body && sourceData.body.platform) {\n  platform = sourceData.body.platform;\n}\n\nstandardData.platform = platform;\nstandardData.hasBinaryData = hasBinary;\n\n// PADRONIZAR DADOS DO WHATSAPP\nif (platform === 'whatsapp') {\n  if (sourceData.contacts && sourceData.contacts[0]) {\n    standardData.userId = sourceData.contacts[0].wa_id;\n    standardData.userName = sourceData.contacts[0].profile.name;\n    standardData.userPhone = normalizeBrazilianPhoneNumber(sourceData.contacts[0].wa_id);\n  }\n  \n  if (sourceData.messages && sourceData.messages[0]) {\n    const message = sourceData.messages[0];\n    standardData.messageType = message.type;\n    \n    switch (message.type) {\n      case 'text':\n        standardData.messageContent = message.text.body;\n        break;\n      case 'image':\n        standardData.mediaId = message.image.id;\n        standardData.mediaCaption = message.image.caption || '';\n        standardData.messageContent = message.image.caption || '[Imagem enviada]';\n        break;\n      case 'audio':\n        standardData.mediaId = message.audio.id;\n        standardData.messageContent = '[Áudio enviado]';\n        break;\n      case 'document':\n        standardData.mediaId = message.document.id;\n        standardData.mediaCaption = message.document.caption || '';\n        standardData.messageContent = message.document.caption || '[Documento enviado]';\n        break;\n    }\n  }\n}\n\n// PADRONIZAR DADOS DA WEB\nif (platform === 'web') {\n  standardData.userId = sourceData.body.user_id;\n  standardData.userName = sourceData.body.user_name;\n  standardData.userPhone = normalizeBrazilianPhoneNumber(sourceData.body.user_phone);\n  standardData.userEmail = sourceData.body.user_email;\n  standardData.messageType = sourceData.body.message_type;\n  \n  // Web com arquivo binário (áudio/imagem/documento)\n  if (hasBinary && ['audio', 'image', 'document'].includes(sourceData.body.message_type)) {\n    standardData.mediaId = 'binary_data';\n    standardData.mediaCaption = sourceData.body.message_content || '';\n    standardData.messageContent = sourceData.body.message_content || `[${sourceData.body.message_type} enviado]`;\n  } else {\n    standardData.messageContent = sourceData.body.message_content;\n  }\n}\n\nreturn [standardData];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4336,
+        3536
+      ],
+      "id": "81319a80-40cd-4865-bbea-614968bc0419",
+      "name": "Padronizar Dados"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Padronizar Dados').first().json.platform }}",
+                    "rightValue": "whatsapp",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e8a28c31-0e9a-49c9-9b9e-22595a669374"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "WhatsApp"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c1699aad-d896-471e-9eef-0a334f2f37e3",
+                    "leftValue": "={{ $('Padronizar Dados').first().json.platform }}",
+                    "rightValue": "web",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "App Wep"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1568,
+        3424
+      ],
+      "id": "5d9d7f01-dcec-49c3-a1c2-5ed5ff56a090",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -896,
+        3760
+      ],
+      "id": "3629c1c9-e7cb-49ce-a1f6-0b084990d376",
+      "name": "Loop Over Items",
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -656,
+        4192
+      ],
+      "id": "09782372-00fd-4914-8ff1-bf06784f2ba4",
+      "name": "Wait2",
+      "webhookId": "fae5791f-1d4b-4ee4-bafc-8213b0cf13b0"
+    },
+    {
+      "parameters": {
+        "jsCode": "// === AGRUPAR MENSAGENS PARA WEB ===\n\n// 1. Dados disponíveis no contexto atual\nconst currentMessage = $json['output.mensagens'] || $json.texto || $json.message;\nconst currentIndex = $runIndex + 1;\n\nconsole.log(`✅ Processando mensagem ${currentIndex}:`, currentMessage);\n\n// 2. Usar sessionStorage simples baseado no workflow\nconst sessionKey = `web_messages_${$workflow.id}_${new Date().toDateString()}`;\n\n// 3. Inicializar storage global\nif (!global.webMessageCollector) {\n  global.webMessageCollector = {};\n}\n\nif (!global.webMessageCollector[sessionKey]) {\n  global.webMessageCollector[sessionKey] = {\n    messages: [],\n    startTime: new Date().toISOString()\n  };\n}\n\n// 4. Adicionar mensagem atual\nglobal.webMessageCollector[sessionKey].messages.push(currentMessage);\nconst collectedMessages = global.webMessageCollector[sessionKey].messages;\n\nconsole.log(`📊 Total coletado: ${collectedMessages.length} mensagens`);\n\n// 5. Verificar se deve finalizar (baseado no Loop Over Items)\nconst isLastInBatch = $('Loop Over Items').item.json.batchComplete || false;\n\nif (isLastInBatch || collectedMessages.length >= 10) { // Finalizar se muitas mensagens\n  console.log(`🎯 Finalizando com ${collectedMessages.length} mensagens`);\n  \n  // 6. Criar mensagem final\n  let finalMessage = \"\";\n  \n  if (collectedMessages.length === 1) {\n    finalMessage = collectedMessages[0];\n  } else {\n    collectedMessages.forEach((msg, index) => {\n      const partNumber = index + 1;\n      finalMessage += `📝 *Parte ${partNumber}:*\\n\\n${msg}`;\n      \n      if (index < collectedMessages.length - 1) {\n        finalMessage += \"\\n\\n\" + \"─\".repeat(30) + \"\\n\\n\";\n      }\n    });\n  }\n  \n  // 7. Limpar cache\n  delete global.webMessageCollector[sessionKey];\n  \n  return [{\n    json: {\n      success: true,\n      message: finalMessage,\n      platform: 'web',\n      total_parts: collectedMessages.length,\n      is_final: true,\n      timestamp: new Date().toISOString()\n    }\n  }];\n  \n} else {\n  // 8. Ainda coletando\n  return [{\n    json: {\n      collecting: true,\n      message_index: currentIndex,\n      current_message: currentMessage,\n      total_collected: collectedMessages.length,\n      is_final: false\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -672,
+        3968
+      ],
+      "id": "60a93906-3df7-43d0-a8a9-bfc30a0832e1",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "content": "Ajuste no Respond to Webhook do App Web",
+        "height": 280,
+        "width": 230,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1744,
+        3664
+      ],
+      "id": "9344b2f2-8f9b-4b76-adcb-b186ade506ea",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Entrada: { tool_outputs: [ { tool_call_id, output }, ... ] }\nconst toolOutputs = $json.tool_outputs;\n\n// Retorna o array no formato ideal para o submit_tool_outputs\nreturn [{\n  json: {\n    tool_outputs: toolOutputs\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6064,
+        7968
+      ],
+      "id": "e57e64bd-7232-4629-a748-1816e1cabc59",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "279968285194059",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').first().json.contacts[0].wa_id }}",
+        "textBody": "={{ $json['output.mensagens'] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        3264
+      ],
+      "id": "e9993278-4310-491f-a43e-8a46124c0233",
+      "name": "Send message",
+      "webhookId": "b8d819fb-e8d3-42b9-9a25-8dd93da663f9",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "oWVyviIkgzTEAvxM",
+          "name": "WhatsApp Altweb 1333"
+        }
+      },
+      "notes": "TEMPLATE DESENVOLVIDO POR NOCODE STARTUP\nhttps://nocodestartup.io/\n\nFORMAÇÃO GESTOR DE AGENTES DE IA:\nhttps://nocodestartup.io/formacao-gestor-agentes-ia/"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {
+          "messageStatusUpdates": [
+            "sent"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -5088,
+        3552
+      ],
+      "id": "6eed9b2e-ce2d-4df3-a08c-0595cbef1d54",
+      "name": "WhatsApp Trigger",
+      "webhookId": "ace281a2-1538-4b74-9ddd-f5363573c408",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "gba7TNxQcPi0AC9k",
+          "name": "WhatsApp OAuth AltWeb 3313"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://perso-agent.ricardo-p-c.workers.dev",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"conversationId\": \"{{ $json.userId }}\",\n  \"messageType\": \"{{ $json.messageType }}\",\n  \"newMessage\": \"{{ $json.messageContent }}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3840,
+        3552
+      ],
+      "id": "f704c913-6917-4419-bb7b-4262567d66e6",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser [Schema]": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Padronizar Dados",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Padronizar Dados": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "98779117-9cb5-4b59-b7fa-818468a72547",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a20427a786de4b4d593e9d1920bb1503df73a7023981c4d9eab54928cccbd934"
+  },
+  "id": "op06sboEgatrn4or",
+  "tags": [
+    {
+      "createdAt": "2025-06-17T01:29:51.247Z",
+      "updatedAt": "2025-06-17T01:29:51.247Z",
+      "id": "HeqRKOhT15GPvIva",
+      "name": "Altweb.AI"
+    }
+  ]
+}

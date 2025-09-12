@@ -1,0 +1,488 @@
+{
+  "name": "Ferramentas do Agente Perso",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tool/send-whatsapp",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        144
+      ],
+      "id": "fbe4e258-5c12-4cfc-bf7e-b81c1fe4c4ee",
+      "name": "Webhook",
+      "webhookId": "bf10f8ae-bfca-498b-a680-a193ac07c0fc"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "abc1dec4-ffcc-4d9c-af6b-812fff5ce5a0",
+              "leftValue": "={{ $json.headers[\"x-n8n-api-key\"] }}",
+              "rightValue": "LY22Svv2zC9PPjdZlMUX03FW8rPxzZ6f",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        144
+      ],
+      "id": "bf39f642-1673-425f-b80e-3eb2f1e4f3e7",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{ \"error\": \"Unauthorized\" }",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        640,
+        352
+      ],
+      "id": "48a42d22-79ca-44f6-88b2-435397b8f495",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.message_type }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "4f8a1781-320b-4e8e-9eeb-8610423f2859"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "41f6ed12-d099-4970-b52f-6d5d6a5863a2",
+                    "leftValue": "={{ $json.body.message_type }}",
+                    "rightValue": "interactive",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Interativa "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        656,
+        0
+      ],
+      "id": "63e66f0b-76e3-4828-9c64-c61c00a77ea2",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "688544081006270",
+        "recipientPhoneNumber": "={{ $item(\"0\").$node[\"Wait7\"].json[\"wa_id\"] }}",
+        "textBody": "=✅ Perfeito! Anotei: \n\n*{{ $json[\"Você irá treinar em\"] }}*. ",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        -224
+      ],
+      "id": "fc7d04a8-b321-4154-8123-f1dea714775b",
+      "name": "Send message3",
+      "webhookId": "edb7c7ac-b743-4dd2-87b3-5abf119cdb98",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "iWbg8ZUWrOHxziEf",
+          "name": "WhatsApp WEBURN Sérgio "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.payload.type }}",
+                    "rightValue": "list",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "dc7848a6-833a-4812-b27d-c39bb8bde4e9"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Lista"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f2243b6a-c9ed-4704-825e-22a6385e33ec",
+                    "leftValue": "={{ $json.body.payload.type }}",
+                    "rightValue": "button",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Botão"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        880,
+        288
+      ],
+      "id": "5e5d4873-6c93-472f-a6bc-4a86ee61fc37",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/688544081006270/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"556181755952\",\n  \"type\": \"interactive\",\n  \"interactive\": {{ JSON.stringify($json.body.payload) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1392,
+        160
+      ],
+      "id": "3f7193d8-c937-412b-a7f3-85f71f24ce43",
+      "name": "Lista",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "iqcgZBE9tOiz4B6Q",
+          "name": "WhatsApp Perso"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/688544081006270/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"6181755952\",\n  \"type\": \"interactive\",\n  \"interactive\": {{ JSON.stringify($json.body.payload) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1392,
+        352
+      ],
+      "id": "d10402ac-3b63-48c9-b621-1b35c5890626",
+      "name": "Botão",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "iqcgZBE9tOiz4B6Q",
+          "name": "WhatsApp Perso"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{ \"status\": \"ok\", \"message\": \"Mensagem de botão enviada.\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1696,
+        144
+      ],
+      "id": "02da5bd1-8d57-4101-963a-deb40b386d06",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"ok\", \"message\": \"Mensagem de botão enviada.\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1712,
+        368
+      ],
+      "id": "f453f975-f991-4fc9-8543-d7109c0c7ae1",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhooks.altweb.ai/webhook/tool/send-whatsapp",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "LY22Svv2zC9PPjdZlMUX03FW8rPxzZ6f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"to\": \"+556181755952\",\n  \"message_type\": \"interactive\",\n  \"payload\": {\n    \"type\": \"list\",\n    \"header\": {\n      \"type\": \"text\",\n      \"text\": \"Última Pergunta!\"\n    },\n    \"body\": {\n      \"text\": \"Ótimo! Mais uma perguntinha rápida:\\n\\n*Há quanto tempo você treina?*\"\n    },\n    \"action\": {\n      \"button\": \"Ver opções\",\n      \"sections\": [\n        {\n          \"title\": \"Aqui algumas opções:\",\n          \"rows\": [\n            {\n              \"id\": \"menu_ja_treinei\",\n              \"title\": \"Já treinei antes\"\n            },\n            {\n              \"id\": \"menu_menos_de_6_meses\",\n              \"title\": \"Menos de 6 meses\"\n            },\n            {\n              \"id\": \"menu_entre_1_e_3_anos\",\n              \"title\": \"Entre 1 e 3 anos\"\n            },\n            {\n              \"id\": \"menu_mais_de_3_anos\",\n              \"title\": \"Mais de 3 anos\"\n            }\n          ]\n        }\n      ]\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -368,
+        -176
+      ],
+      "id": "c45cf821-3dc2-46a0-bed0-0d34c579491a",
+      "name": "2. Teste de Mensagem Interativa (Lista )"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "webhooks.altweb.ai",
+            "user-agent": "axios/1.8.3",
+            "content-length": "82",
+            "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "webhooks.altweb.ai",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik_traefik.1",
+            "x-n8n-api-key": "LY22Svv2zC9PPjdZlMUX03FW8rPxzZ6f",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "to": "+5511999999999",
+            "message_type": "text",
+            "payload": {
+              "text": "Olá do agente!"
+            }
+          },
+          "webhookUrl": "https://webhooks.altweb.ai/webhook/tool/send-whatsapp",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send message3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message3": {
+      "main": [
+        []
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Lista",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Botão",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lista": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Botão": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bc407769-8c98-4839-b4f9-aa235e80e07d",
+  "meta": {
+    "instanceId": "a20427a786de4b4d593e9d1920bb1503df73a7023981c4d9eab54928cccbd934"
+  },
+  "id": "mpcP9Kqts2yGhYOW",
+  "tags": []
+}
