@@ -40,6 +40,11 @@ function getWebhookBase(env: Env) {
 }
 
 // ---------- Adapter WhatsApp → n8n ----------
+function getWebhookBase(env: Env) {
+  const base = (env.N8N_WEBHOOK_URL || '').replace(/\/+$/, '');
+  return base.endsWith('/webhook') ? base : `${base}/webhook`;
+}
+
 async function postToSendWhatsappWebHook(env: Env, body: unknown, traceId: string): Promise<SendResult> {
   const url = `${getWebhookBase(env)}/tool/send-whatsapp`;
   console.log('send-whatsapp →', url);
