@@ -196,6 +196,99 @@ async function buscarProgramasWeburn(
 	}
 }
 
+// ---------- Multimodal Handlers ----------
+const json = (data: any, status = 200) =>
+  new Response(JSON.stringify(data), {
+    status,
+    headers: { 'content-type': 'application/json' },
+  });
+
+function base64ToBlob(b64: string, contentType = 'application/octet-stream'): Blob {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new Blob([bytes], { type: contentType });
+}
+
+async function handleImageAnalysis(openai: OpenAI, body: any) {
+  const { imageUrl, imageBase64, prompt } = body || {};
+  const content: any[] = [];
+  if (prompt) content.push({ type: 'text', text: String(prompt) });
+  if (imageUrl) {
+    content.push({ type: 'image_url', image_url: { url: String(imageUrl) } });
+  } else if (imageBase64) {
+    const dataUrl = `data:image/png;base64,${String(imageBase64)}`;
+    content.push({ type: 'image_url', image_url: { url: dataUrl } });
+  } else {
+    return json({ ok: false, error: 'Missing imageUrl or imageBase64' }, 400);
+  }
+
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [{ role: 'user', content }],
+    temperature: 0.2,
+    max_tokens: 600,
+  });
+  const text = completion.choices[0]?.message?.content ?? '';
+  return json({ ok: true, result: text, model: 'gpt-4o-mini' }, 200);
+}
+
+async function handleAudioTranscription(openai: OpenAI, body: any) {
+  const { audioUrl, audioBase64, mimeType = 'audio/webm', language, prompt } = body || {};
+  let file: File | undefined;
+  if (audioUrl) {
+    const res = await fetch(String(audioUrl));
+    if (!res.ok) return json({ ok: false, error: `Failed to fetch audio (${res.status})` }, 400);
+    const blob = await res.blob();
+    file = new File([blob], 'audio', { type: blob.type || mimeType });
+  } else if (audioBase64) {
+    const blob = base64ToBlob(String(audioBase64), mimeType);
+    if (blob.size === 0) return json({ ok: false, error: 'Invalid audioBase64' }, 400);
+    file = new File([blob], 'audio', { type: mimeType });
+  } else {
+    return json({ ok: false, error: 'Missing audioUrl or audioBase64' }, 400);
+  }
+
+  // @ts-ignore SDK typing varies
+  const tr = await (openai as any).audio.transcriptions.create({
+    file,
+    model: 'whisper-1',
+    language,
+    prompt,
+  });
+  const text = tr?.text ?? tr?.data?.text ?? '';
+  return json({ ok: true, text, model: 'whisper-1' }, 200);
+}
+
+async function handleDocUnderstanding(openai: OpenAI, body: any) {
+  const { text, docUrl, prompt } = body || {};
+  let sourceText = String(text || '');
+  if (!sourceText && docUrl) {
+    const res = await fetch(String(docUrl));
+    if (!res.ok) return json({ ok: false, error: `Failed to fetch doc (${res.status})` }, 400);
+    const ct = res.headers.get('content-type') || '';
+    if (ct.startsWith('text/')) {
+      sourceText = await res.text();
+    } else {
+      return json({ ok: false, error: 'UNSUPPORTED_DOC', detail: 'Use text or a text/* URL for now.' }, 415);
+    }
+  }
+  if (!sourceText) return json({ ok: false, error: 'Missing text or docUrl' }, 400);
+
+  const q = prompt ? String(prompt) : 'Resuma o conteúdo de forma objetiva.';
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      { role: 'system', content: 'Você é um assistente que resume documentos.' },
+      { role: 'user', content: `${q}\n\n---\n${sourceText.slice(0, 8000)}` },
+    ],
+    temperature: 0.3,
+    max_tokens: 600,
+  });
+  const out = completion.choices[0]?.message?.content ?? '';
+  return json({ ok: true, result: out, model: 'gpt-4o-mini' }, 200);
+}
+
 // ---------- Worker ----------
 export default {
 	async fetch(request: Request, env: Env, _ctx: ExecutionContext): Promise<Response> {
@@ -224,6 +317,25 @@ export default {
 		}
 		if (request.method !== 'POST') {
 			return new Response('Método não permitido', { status: 405 });
+		}
+
+		// Multimodal endpoints
+		if (pathname === '/multimodal/image' || pathname === '/multimodal/audio' || pathname === '/multimodal/doc') {
+			if (!env.OPENAI_API_KEY) return json({ ok: false, error: 'Missing OPENAI_API_KEY' }, 500);
+			let body: any = {};
+			try {
+				body = await request.json();
+			} catch {
+				return json({ ok: false, error: 'Invalid JSON body' }, 400);
+			}
+			const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+			try {
+				if (pathname === '/multimodal/image') return await handleImageAnalysis(openai, body);
+				if (pathname === '/multimodal/audio') return await handleAudioTranscription(openai, body);
+				return await handleDocUnderstanding(openai, body);
+			} catch (e: any) {
+				return json({ ok: false, error: 'MULTIMODAL_ERROR', detail: e?.message || String(e) }, 500);
+			}
 		}
 
 		// Inicializar clientes
