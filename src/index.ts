@@ -37,6 +37,27 @@ const normPhone = (to: string) => {
 
 const trimTrailingSlash = (u?: string) => (u ? u.replace(/\/+$/, '') : u);
 
+async function saveConversationEntries(
+  env: Env,
+  conversationId: string,
+  entries: { role: 'user' | 'assistant' | 'system'; content: string }[]
+) {
+  try {
+    if (!conversationId) return;
+    if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY) return;
+    const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY);
+    const rows = entries.map((e) => ({
+      conversation_id: conversationId,
+      role: e.role,
+      content: e.content,
+    }));
+    const { error } = await (supabase as any).from('conversation_history').insert(rows);
+    if (error) console.error('saveConversationEntries error:', error);
+  } catch (err) {
+    console.error('saveConversationEntries failed:', err);
+  }
+}
+
 async function postToSendWhatsappWebHook(
 	env: Env,
 	body: unknown,
@@ -330,9 +351,35 @@ export default {
 			}
 			const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 			try {
-				if (pathname === '/multimodal/image') return await handleImageAnalysis(openai, body);
-				if (pathname === '/multimodal/audio') return await handleAudioTranscription(openai, body);
-				return await handleDocUnderstanding(openai, body);
+				let resp: Response;
+				if (pathname === '/multimodal/image') resp = await handleImageAnalysis(openai, body);
+				else if (pathname === '/multimodal/audio') resp = await handleAudioTranscription(openai, body);
+				else resp = await handleDocUnderstanding(openai, body);
+
+				// Persistir no histórico quando houver conversationId e save !== false
+				const shouldSave = body?.save !== false && typeof body?.conversationId === 'string' && body.conversationId.length > 0;
+				if (shouldSave) {
+					const data = await resp.clone().json().catch(() => null as any);
+					if (data?.ok) {
+						const entries: { role: 'user' | 'assistant'; content: string }[] = [];
+						if (pathname === '/multimodal/audio') {
+							const trans = String((data as any).text || '').trim();
+							if (trans) entries.push({ role: 'user', content: `[áudio] ${trans}` });
+						} else if (pathname === '/multimodal/image') {
+							const userNote = body?.prompt ? `[imagem] ${String(body.prompt).slice(0, 256)}` : '[imagem]';
+							entries.push({ role: 'user', content: userNote });
+							const analysis = String((data as any).result || (data as any).text || '').trim();
+							if (analysis) entries.push({ role: 'assistant', content: analysis });
+						} else if (pathname === '/multimodal/doc') {
+							const userNote = body?.prompt ? `[documento] ${String(body.prompt).slice(0, 256)}` : '[documento]';
+							entries.push({ role: 'user', content: userNote });
+							const summary = String((data as any).result || '').trim();
+							if (summary) entries.push({ role: 'assistant', content: summary });
+						}
+						await saveConversationEntries(env, body.conversationId, entries);
+					}
+				}
+				return resp;
 			} catch (e: any) {
 				return json({ ok: false, error: 'MULTIMODAL_ERROR', detail: e?.message || String(e) }, 500);
 			}
